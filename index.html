@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentinel • API Support Copilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="pastel-theme">
+  
+  <!-- Header Bar -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <div class="logo-badge">
+        <i class="fa-solid fa-heart-pulse"></i>
+      </div>
+      <div>
+        <div class="brand-title">
+          <span>Sentinel</span> API Support
+        </div>
+        <div class="brand-subtitle">Asistente Inteligente de Integraciones & APIs</div>
+      </div>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn-primary" id="btn-quick-incident">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Siguiente Incidente
+      </button>
+      <button class="btn-secondary" id="btn-inspect-prompt">
+        <i class="fa-solid fa-sliders"></i> Ver Pipeline & Prompt
+      </button>
+    </div>
+  </header>
+
+  <!-- 3-Column Grid Layout -->
+  <main class="main-layout">
+    
+    <!-- LEFT PANEL: Technical Knowledge Base & Runbooks -->
+    <section class="panel panel-left">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fa-solid fa-bookmark text-rose"></i>
+          <span>Guías y Especificaciones</span>
+        </div>
+        <span class="badge badge-rose" id="vault-count">5 Guías</span>
+      </div>
+      
+      <div class="vault-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="vault-search-input" placeholder="Buscar guías de API, Webhooks...">
+      </div>
+
+      <!-- Notes Explorer -->
+      <div class="vault-notes-list" id="vault-notes-list">
+        <!-- Injected dynamically by JS -->
+      </div>
+
+      <!-- Context Filtering Architecture Card -->
+      <div class="context-engine-card">
+        <div class="card-header-small">
+          <span><i class="fa-solid fa-sparkles text-mint"></i> Filtro de Contexto Inteligente</span>
+          <span class="badge badge-mint">Activo</span>
+        </div>
+        <p class="small-text">
+          El copiloto extrae únicamente el fragmento exacto de la guía o esquema del error, reduciendo el prompt a 850 tokens para responder en 240ms sin alucinaciones.
+        </p>
+        <div class="filter-metrics">
+          <div class="metric-box">
+            <span class="metric-val" id="filter-reduction">-93.5%</span>
+            <span class="metric-lbl">Ahorro Tokens</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-val" id="filter-latency">240ms</span>
+            <span class="metric-lbl">Velocidad</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-val" id="filter-accuracy">100%</span>
+            <span class="metric-lbl">Precisión</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CENTER PANEL: Live Server Telemetry & Real-Time Log Stream -->
+    <section class="panel panel-center">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fa-solid fa-chart-simple text-rose"></i>
+          <span>Actividad de la API & Logs</span>
+        </div>
+        <div class="header-actions">
+          <span class="badge badge-rose"><i class="fa-solid fa-circle-dot"></i> En Vivo</span>
+          <button class="btn-xs" id="btn-clear-logs"><i class="fa-solid fa-eraser"></i> Limpiar</button>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Bar -->
+      <div class="metrics-bar">
+        <div class="metric-card">
+          <div class="metric-icon bg-rose"><i class="fa-solid fa-paper-plane"></i></div>
+          <div class="metric-info">
+            <span class="metric-title">Tasa de Éxito</span>
+            <span class="metric-data" id="metric-api-success">99.4% OK</span>
+          </div>
+          <div class="sparkline-bar"><div class="sparkline-fill" id="api-fill" style="width: 99%"></div></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon bg-purple"><i class="fa-solid fa-bolt"></i></div>
+          <div class="metric-info">
+            <span class="metric-title">Latencia Media</span>
+            <span class="metric-data" id="metric-ram">28 ms</span>
+          </div>
+          <div class="sparkline-bar"><div class="sparkline-fill purple-fill" id="ram-fill" style="width: 25%"></div></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon bg-mint">
+            <i class="fa-solid fa-heart" id="anomaly-icon"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-title">Estado General</span>
+            <span class="metric-data" id="metric-anomalies">Estable</span>
+          </div>
+          <div class="sparkline-bar"><div class="sparkline-fill green-fill" id="health-fill" style="width: 100%"></div></div>
+        </div>
+      </div>
+
+      <!-- Terminal / Logs Feed (Strictly fixed height with internal scroll) -->
+      <div class="terminal-container">
+        <div class="terminal-header">
+          <div class="window-dots">
+            <span class="dot pink"></span>
+            <span class="dot peach"></span>
+            <span class="dot mint"></span>
+          </div>
+          <div class="terminal-tab">
+            <i class="fa-solid fa-clock-rotate-left"></i> Registro de Peticiones y Respuestas HTTP
+          </div>
+        </div>
+        <div class="terminal-body" id="terminal-logs">
+          <!-- Terminal logs injected dynamically -->
+        </div>
+      </div>
+
+      <!-- Incident Simulation Toolbar -->
+      <div class="simulator-toolbar">
+        <div class="toolbar-label">
+          <i class="fa-solid fa-list-check"></i> <strong>Seleccionar Caso de Soporte:</strong>
+        </div>
+        <div class="toolbar-buttons">
+          <button class="btn-scenario active-scenario" data-scenario="api-422-payload">
+            <i class="fa-solid fa-file-invoice text-rose"></i> 1. Error 422 Payload Facturación
+          </button>
+          <button class="btn-scenario" data-scenario="auth-token-403">
+            <i class="fa-solid fa-key text-peach"></i> 2. Error 401/403 Token Expirado
+          </button>
+          <button class="btn-scenario" data-scenario="pm2-memory-crash">
+            <i class="fa-solid fa-server text-coral"></i> 3. Error 502 & Memoria en Servidor
+          </button>
+          <button class="btn-scenario" data-scenario="mcp-tool-timeout">
+            <i class="fa-solid fa-robot text-purple"></i> 4. Integración Agente IA & MCP
+          </button>
+          <button class="btn-scenario" data-scenario="postgres-uuid">
+            <i class="fa-solid fa-database text-mint"></i> 5. Error SQL en PostgreSQL
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: AI Agent Analysis & Action Resolution -->
+    <section class="panel panel-right">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fa-solid fa-wand-magic-sparkles text-rose"></i>
+          <span>Diagnóstico & Solución</span>
+        </div>
+        <span class="badge badge-ai" id="ai-status-badge">Listo</span>
+      </div>
+
+      <div class="ai-resolution-container" id="ai-resolution-container">
+        
+        <!-- Empty / Standby State -->
+        <div class="empty-state" id="empty-ai-state">
+          <div class="empty-icon"><i class="fa-solid fa-heart"></i></div>
+          <h3>Asistente en espera</h3>
+          <p>Selecciona un caso abajo para ver cómo el copiloto analiza la petición, extrae la solución técnica y redacta la respuesta para el cliente.</p>
+        </div>
+
+        <!-- Dynamic Agent Card (rendered on detection) -->
+        <div class="diagnosis-card hidden" id="diagnosis-card">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+
+      <!-- Impact Box -->
+      <div class="impact-summary-card">
+        <div class="card-header-small">
+          <i class="fa-solid fa-circle-check text-mint"></i> <strong>Impacto en la Atención al Cliente</strong>
+        </div>
+        <ul class="impact-list">
+          <li>
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <div>
+              <strong>Tiempo de Respuesta:</strong>
+              <span>De 45 minutos a <strong>menos de 2 minutos</strong>.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-heart"></i>
+            <div>
+              <strong>Empatía y Claridad:</strong>
+              <span>Respuestas humanas y cordiales listas para el cliente.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-code"></i>
+            <div>
+              <strong>Precisión Técnica:</strong>
+              <span>Payloads corregidos y comandos cURL listos para Postman.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Prompt & Context Inspector Modal -->
+  <div class="modal-overlay hidden" id="prompt-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-sliders text-rose"></i>
+          <span>Pipeline de IA & Filtro de Contexto</span>
+        </div>
+        <button class="btn-icon" id="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="pipeline-flow">
+          <div class="flow-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <strong>Captura de Log</strong>
+              <span>Traza de error HTTP</span>
+            </div>
+          </div>
+          <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="flow-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <strong>Match con Guía</strong>
+              <span>Búsqueda semántica</span>
+            </div>
+          </div>
+          <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="flow-step active-flow">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <strong>Filtro de Contexto</strong>
+              <span>Poda a 850 tokens</span>
+            </div>
+          </div>
+          <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="flow-step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <strong>Síntesis</strong>
+              <span>Respuesta + Payload</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="prompt-tabs">
+          <button class="prompt-tab active" data-tab="context-diff">Comparativa: Sin Filtro vs Con Filtrado</button>
+          <button class="prompt-tab" data-tab="system-prompt">Prompt del Copiloto</button>
+          <button class="prompt-tab" data-tab="context-payload">Fragmento Técnico Inyectado</button>
+        </div>
+
+        <div class="tab-content" id="tab-content-area">
+          <div id="diff-view" class="diff-container">
+            <div class="diff-col bad">
+              <h4>❌ Enfoque Tradicional sin Filtrar</h4>
+              <p class="diff-desc">Inyectar todos los manuales completos al modelo:</p>
+              <ul>
+                <li><strong>14,200 tokens</strong> consumidos por consulta.</li>
+                <li>Alucinaciones en nombres de campos y parámetros.</li>
+                <li>Latencia de respuesta: <strong>4.8 segundos</strong>.</li>
+                <li>Respuestas técnicas confusas para el cliente.</li>
+              </ul>
+            </div>
+            <div class="diff-col good">
+              <h4>✅ Sentinel con Filtrado de Contexto</h4>
+              <p class="diff-desc">Extracción precisa por tipo de error y esquema JSON:</p>
+              <ul>
+                <li><strong>850 tokens</strong> enfocados en el fallo específico.</li>
+                <li>0% alucinaciones: payloads JSON válidos.</li>
+                <li>Latencia ultra-rápida: <strong>240 milisegundos</strong>.</li>
+                <li>Genera mensaje cordial y payload para Postman.</li>
+              </ul>
+            </div>
+          </div>
+          <pre class="hidden" id="prompt-pre"><code id="prompt-code-display"></code></pre>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span class="tokens-info"><i class="fa-solid fa-sparkles text-mint"></i> Ahorro de Tokens: <strong>93.5%</strong> | Velocidad: <strong>~240ms</strong></span>
+        <button class="btn-secondary" id="btn-copy-prompt"><i class="fa-regular fa-copy"></i> Copiar Métricas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Note Preview Modal -->
+  <div class="modal-overlay hidden" id="note-modal">
+    <div class="modal-card note-modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-book-open text-rose"></i>
+          <span id="note-modal-title">Guía Técnica de la API</span>
+        </div>
+        <button class="btn-icon" id="btn-close-note-modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body note-body-content" id="note-modal-content">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
